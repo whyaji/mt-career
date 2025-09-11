@@ -1,0 +1,13 @@
+{
+  "version": "7",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1757582713060,
+      "tag": "0000_wooden_starbolt",
+      "breakpoints": true
+    }
+  ]
+}

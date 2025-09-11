@@ -1,7 +1,12 @@
 import { createFileRoute } from '@tanstack/react-router';
 
-import FormScreen from '../feature/form/screen/FormScreen';
+import { NotFoundScreenComponent } from '@/components/NotFoundScreenComponent';
 
 export const Route = createFileRoute('/')({
-  component: FormScreen,
+  component: Index,
+  errorComponent: NotFoundScreenComponent,
 });
+
+function Index() {
+  return <div>Index</div>;
+}

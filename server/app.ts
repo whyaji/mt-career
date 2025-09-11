@@ -1,24 +1,26 @@
-import { Hono } from "hono";
-import { serveStatic } from "hono/bun";
-import { cors } from "hono/cors";
-import { logger } from "hono/logger";
+import { Hono } from 'hono';
+import { serveStatic } from 'hono/bun';
+import { cors } from 'hono/cors';
+import { logger } from 'hono/logger';
+
+import { verficationRoute } from './routes/verificationRoute';
 
 const app = new Hono();
 
-app.use("*", logger());
-app.use("*", cors());
+app.use('*', logger());
+app.use('*', cors());
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const apiRoutes = app.basePath("/api/v1");
+const apiRoutes = app.basePath('/api/v1').route('/verification', verficationRoute);
 
 // Serve files from public directory
-app.get("/uploads/*", serveStatic({ root: "./server/public" }));
+app.get('/uploads/*', serveStatic({ root: './server/public' }));
 
 // Serve static files from the built frontend
-app.get("*", serveStatic({ root: "./frontend/dist" }));
+app.get('*', serveStatic({ root: './frontend/dist' }));
 
 // Fallback to index.html for client-side routing
-app.get("*", serveStatic({ path: "./frontend/dist/index.html" }));
+app.get('*', serveStatic({ path: './frontend/dist/index.html' }));
 
 export default app;
 export type ApiRoutes = typeof apiRoutes;
