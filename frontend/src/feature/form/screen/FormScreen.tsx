@@ -29,7 +29,9 @@ import {
 } from '@tabler/icons-react';
 import { useState } from 'react';
 
+import { submitForm } from '@/lib/api/formApi';
 import { Route } from '@/routes/$location/$batch';
+import type { ApplicantDataPostType } from '@/types/applicantData.type';
 
 import { AgreementForm } from '../../../components/AgreementForm';
 import { FormHeader } from '../../../components/FormHeader';
@@ -359,7 +361,7 @@ export default function FormScreen() {
 
     try {
       // Combine data from both forms and convert to proper types
-      const combinedData = {
+      const combinedData: ApplicantDataPostType = {
         // Agreement data
         agreement1: agreementForm.values.agreement1 as 'agree' | 'disagree',
         agreement2: agreementForm.values.agreement2 as 'agree' | 'disagree',
@@ -370,11 +372,11 @@ export default function FormScreen() {
         jenis_kelamin: personalInfoForm.values.jenis_kelamin as 'L' | 'P',
         tempat_lahir: personalInfoForm.values.tempat_lahir,
         tanggal_lahir: personalInfoForm.values.tanggal_lahir,
-        usia: personalInfoForm.values.usia || 0,
+        usia: Number(personalInfoForm.values.usia || 0),
         daerah_lahir: personalInfoForm.values.daerah_lahir,
         provinsi_lahir: personalInfoForm.values.provinsi_lahir,
-        tinggi_badan: personalInfoForm.values.tinggi_badan || 0,
-        berat_badan: personalInfoForm.values.berat_badan || 0,
+        tinggi_badan: Number(personalInfoForm.values.tinggi_badan || 0),
+        berat_badan: Number(personalInfoForm.values.berat_badan || 0),
         daerah_domisili: personalInfoForm.values.daerah_domisili,
         provinsi_domisili: personalInfoForm.values.provinsi_domisili,
         kota_domisili: personalInfoForm.values.kota_domisili,
@@ -383,19 +385,10 @@ export default function FormScreen() {
           | 'pkpp-estate'
           | 'pkpp-ktu'
           | 'pkpp-mill',
+        batch_id: batch.id,
       };
 
-      // Simulate API call with potential failure
-      await new Promise((resolve, reject) => {
-        setTimeout(() => {
-          // Simulate 10% chance of failure for demo
-          if (Math.random() < 0.1) {
-            reject(new Error('Server sedang bermasalah. Silakan coba lagi.'));
-          } else {
-            resolve(combinedData);
-          }
-        }, 2000);
-      });
+      await submitForm(combinedData);
 
       // Log form data for debugging in development
       if (process.env.NODE_ENV === 'development') {
@@ -619,7 +612,7 @@ export default function FormScreen() {
   };
 
   if (isSubmitted) {
-    return <SubmissionConfirmation onReset={handleReset} />;
+    return <SubmissionConfirmation onReset={handleReset} batch={batch} />;
   }
 
   // Loading state

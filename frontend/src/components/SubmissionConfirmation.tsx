@@ -1,11 +1,14 @@
 import { Alert, Button, Container, Flex, Paper, Stack, Text, Title } from '@mantine/core';
 import { IconCheck, IconHome } from '@tabler/icons-react';
 
+import type { BatchType } from '@/types/batch.type';
+
 interface SubmissionConfirmationProps {
   onReset: () => void;
+  batch: BatchType;
 }
 
-export function SubmissionConfirmation({ onReset }: SubmissionConfirmationProps) {
+export function SubmissionConfirmation({ onReset, batch }: SubmissionConfirmationProps) {
   return (
     <Container
       size="lg"
@@ -37,7 +40,7 @@ export function SubmissionConfirmation({ onReset }: SubmissionConfirmationProps)
 
               <Text size="lg" c="dimmed" mb="lg">
                 Terima kasih telah mendaftar Program Kepemimpinan Perkebunan Pratama (PKPP) Angkatan
-                XXV. Data Anda telah berhasil disimpan.
+                {batch.number_code} {batch.location}. Data Anda telah berhasil disimpan.
               </Text>
             </div>
 

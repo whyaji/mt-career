@@ -35,18 +35,18 @@ const provinsiList = [
   'Sumatera Utara',
   'Sumatera Barat',
   'Riau',
+  'Kepulauan Riau',
   'Jambi',
   'Sumatera Selatan',
+  'Kepulauan Bangka Belitung',
   'Bengkulu',
   'Lampung',
-  'Bangka Belitung',
-  'Kepulauan Riau',
   'DKI Jakarta',
   'Jawa Barat',
+  'Banten',
   'Jawa Tengah',
   'DI Yogyakarta',
   'Jawa Timur',
-  'Banten',
   'Bali',
   'Nusa Tenggara Barat',
   'Nusa Tenggara Timur',
@@ -65,7 +65,13 @@ const provinsiList = [
   'Maluku Utara',
   'Papua',
   'Papua Barat',
+  'Papua Selatan',
+  'Papua Tengah',
+  'Papua Pegunungan',
+  'Papua Barat Daya',
 ];
+
+const uppercaseProvinsiList = provinsiList.map((provinsi) => provinsi.toUpperCase());
 
 const daerahList = [
   'SUMATERA',
@@ -308,7 +314,7 @@ export function PersonalInfoForm({ form, isMobile = false }: PersonalInfoFormPro
               placeholder="Pilih provinsi lahir"
               required
               info="Provinsi tempat kelahiran sesuai yang tertera di KTP"
-              data={provinsiList}
+              data={uppercaseProvinsiList}
               {...form.getInputProps('provinsi_lahir')}
             />
           </Stack>
@@ -368,7 +374,7 @@ export function PersonalInfoForm({ form, isMobile = false }: PersonalInfoFormPro
               placeholder="Pilih provinsi domisili"
               required
               info="Provinsi tempat tinggal saat ini sesuai dengan domisili aktual"
-              data={provinsiList}
+              data={provinsiList.map((provinsi) => provinsi.toUpperCase())}
               {...form.getInputProps('provinsi_domisili')}
             />
             <TextInputField
