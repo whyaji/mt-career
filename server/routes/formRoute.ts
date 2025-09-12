@@ -6,7 +6,7 @@ import { Hono } from 'hono';
 import { db } from '../db/database';
 import { applicantDataTable } from '../db/schema/schema';
 import { logger } from '../lib/logger';
-import { containsSuspiciousPatterns, sanitizeText } from '../lib/security';
+import { containsSuspiciousPatterns, sanitizeText, verifyTurnstileToken } from '../lib/security';
 import { zodApplicantDataPost } from '../types/applicantData.type';
 
 export const formRoute = new Hono().post(
@@ -15,6 +15,15 @@ export const formRoute = new Hono().post(
   async (c) => {
     try {
       const body = c.req.valid('json');
+
+      // Verify Turnstile token
+      const clientIP = c.req.header('x-forwarded-for') || c.req.header('x-real-ip') || 'unknown';
+      const turnstileValid = await verifyTurnstileToken(body.turnstileToken, clientIP);
+
+      if (!turnstileValid) {
+        logger.warn(`Turnstile verification failed from IP: ${clientIP}`);
+        return c.json({ error: 'TURNSTILE_FAILED', message: 'Security verification failed' }, 400);
+      }
 
       // Additional security checks
       const textFields = [
@@ -45,9 +54,10 @@ export const formRoute = new Hono().post(
         provinsi_domisili: sanitizeText(body.provinsi_domisili),
       };
 
-      // remove agreements from body to match ApplicantDataPostType
+      // remove agreements and turnstileToken from body to match ApplicantDataPostType
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { agreement1, agreement2, agreement3, ...applicantData } = sanitizedBody;
+      const { agreement1, agreement2, agreement3, turnstileToken, ...applicantData } =
+        sanitizedBody;
 
       // Check for duplicate submissions (same NIK)
       const existingSubmission = await db

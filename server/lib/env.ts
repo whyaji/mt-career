@@ -11,6 +11,9 @@ const envSchema = z.object({
   DB_NAME: z.string(),
 
   FE_URL: z.string().default('http://localhost:5173'),
+
+  TURNSTILE_SECRET_KEY: z.string(),
+  TURNSTILE_SITE_KEY: z.string(),
 });
 
 export default envSchema.parse(process.env);

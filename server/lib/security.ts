@@ -1,4 +1,6 @@
 // Security configuration and utilities
+import env from './env';
+import { logger } from './logger';
 
 export const SECURITY_CONFIG = {
   // Rate limiting
@@ -133,3 +135,45 @@ export const isBlockedUserAgent = (userAgent: string): boolean => {
 export const isSuspiciousIP = (ip: string): boolean => {
   return SECURITY_CONFIG.SUSPICIOUS_IPS.some((range) => range.test(ip));
 };
+
+/**
+ * Verify Cloudflare Turnstile token
+ * @param token - The Turnstile token from the client
+ * @param ip - The client's IP address (optional)
+ * @returns Promise<boolean> - true if verification succeeds
+ */
+export async function verifyTurnstileToken(token: string, ip?: string): Promise<boolean> {
+  try {
+    const formData = new FormData();
+    formData.append('secret', env.TURNSTILE_SECRET_KEY);
+    formData.append('response', token);
+    if (ip) {
+      formData.append('remoteip', ip);
+    }
+
+    const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!response.ok) {
+      logger.error(
+        `Turnstile verification request failed: ${response.status} ${response.statusText}`
+      );
+      return false;
+    }
+
+    const result = await response.json();
+
+    if (result.success) {
+      logger.info('Turnstile verification successful');
+      return true;
+    } else {
+      logger.warn('Turnstile verification failed:', result['error-codes'] || 'Unknown error');
+      return false;
+    }
+  } catch (error) {
+    logger.error(`Error verifying Turnstile token: ${String(error)}`);
+    return false;
+  }
+}
