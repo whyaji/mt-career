@@ -104,14 +104,14 @@ export const SECURITY_CONFIG = {
   // Content Security Policy
   CSP: {
     defaultSrc: ["'self'"],
-    styleSrc: ["'self'", "'unsafe-inline'"],
-    scriptSrc: ["'self'"],
+    styleSrc: ["'self'", "'unsafe-inline'"], // masih boleh inline style
+    scriptSrc: ["'self'", 'https://challenges.cloudflare.com', 'https://*.cloudflare.com'],
     imgSrc: ["'self'", 'data:', 'https:'],
-    connectSrc: ["'self'"],
+    connectSrc: ["'self'", 'https://challenges.cloudflare.com'],
     fontSrc: ["'self'"],
     objectSrc: ["'none'"],
     mediaSrc: ["'self'"],
-    frameSrc: ["'none'"],
+    frameSrc: ["'self'", 'https://challenges.cloudflare.com', 'https://*.cloudflare.com'],
   },
 };
 

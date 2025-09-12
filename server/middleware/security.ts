@@ -1,4 +1,4 @@
-import { Context, Next } from 'hono';
+import type { Context, Next } from 'hono';
 
 import { logger } from '../lib/logger';
 import { isBlockedUserAgent, isSuspiciousIP } from '../lib/security';
