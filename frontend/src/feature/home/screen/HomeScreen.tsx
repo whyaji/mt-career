@@ -37,7 +37,7 @@ export default function HomeScreen() {
   });
 
   const batches = useMemo(() => {
-    if (data?.success && data.data) {
+    if (data?.success && 'data' in data && data.data) {
       return data.data;
     }
     return [];

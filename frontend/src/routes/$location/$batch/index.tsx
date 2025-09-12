@@ -12,7 +12,7 @@ export const Route = createFileRoute('/$location/$batch/')({
     const responseData = await response.json();
     if (responseData.success && 'data' in responseData) {
       return responseData.data as BatchType;
-    } else if (responseData.error === 'BATCH_NOT_FOUND') {
+    } else if ('error' in responseData && responseData.error === 'BATCH_NOT_FOUND') {
       throw notFound();
     } else {
       throw new Error();

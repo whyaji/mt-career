@@ -104,10 +104,10 @@ function SelectField({ ...props }: ComponentProps<typeof Select>) {
 function DateInputField({ ...props }: ComponentProps<typeof DatePickerInput>) {
   return (
     <DatePickerInput
+      {...props}
       valueFormat="DD MMMM YYYY"
       locale="id"
       value={props.value === '' ? null : props.value}
-      {...props}
     />
   );
 }
