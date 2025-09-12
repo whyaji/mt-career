@@ -85,108 +85,30 @@ const daerahList = [
   'PAPUA',
 ];
 
-function TextLabelTitle({
-  label,
-  required = false,
-  info,
-}: {
-  label: string;
-  required?: boolean;
-  info?: string;
-}) {
-  return (
-    <>
-      <Text size="md" fw={600} c="dark">
-        {label}
-        {required && (
-          <Text component="span" c="red">
-            {' '}
-            *
-          </Text>
-        )}
-      </Text>
-      {info && (
-        <Text size="sm" c="dimmed">
-          {info}
-        </Text>
-      )}
-    </>
-  );
+function TextInputField({ ...props }: ComponentProps<typeof TextInput>) {
+  return <TextInput {...props} />;
 }
 
-function TextInputField({
-  label,
-  required = false,
-  info,
-  ...props
-}: { label: string; required?: boolean; info?: string } & ComponentProps<typeof TextInput>) {
-  return (
-    <Stack gap="xs">
-      <TextLabelTitle label={label} required={required} info={info} />
-      <TextInput required={required} style={{ textTransform: 'uppercase' }} {...props} />
-    </Stack>
-  );
+function NumberInputField({ ...props }: ComponentProps<typeof NumberInput>) {
+  return <NumberInput {...props} />;
 }
 
-function NumberInputField({
-  label,
-  required = false,
-  info,
-  ...props
-}: { label: string; required?: boolean; info?: string } & ComponentProps<typeof NumberInput>) {
-  return (
-    <Stack gap="xs">
-      <TextLabelTitle label={label} required={required} info={info} />
-      <NumberInput required={required} {...props} />
-    </Stack>
-  );
+function TextAreaField({ ...props }: ComponentProps<typeof Textarea>) {
+  return <Textarea {...props} />;
 }
 
-function TextAreaField({
-  label,
-  required = false,
-  info,
-  ...props
-}: { label: string; required?: boolean; info?: string } & ComponentProps<typeof Textarea>) {
-  return (
-    <Stack gap="xs">
-      <TextLabelTitle label={label} required={required} info={info} />
-      <Textarea required={required} {...props} />
-    </Stack>
-  );
+function SelectField({ ...props }: ComponentProps<typeof Select>) {
+  return <Select {...props} />;
 }
 
-function SelectField({
-  label,
-  required = false,
-  info,
-  ...props
-}: { label: string; required?: boolean; info?: string } & ComponentProps<typeof Select>) {
+function DateInputField({ ...props }: ComponentProps<typeof DatePickerInput>) {
   return (
-    <Stack gap="xs">
-      <TextLabelTitle label={label} required={required} info={info} />
-      <Select required={required} {...props} />
-    </Stack>
-  );
-}
-
-function DateInputField({
-  label,
-  required = false,
-  info,
-  ...props
-}: { label: string; required?: boolean; info?: string } & ComponentProps<typeof DatePickerInput>) {
-  return (
-    <Stack gap="xs">
-      <TextLabelTitle label={label} required={required} info={info} />
-      <DatePickerInput
-        required={required}
-        {...props}
-        valueFormat="DD MMMM YYYY"
-        locale="id"
-        value={props.value === '' ? null : props.value}
-      />
-    </Stack>
+    <DatePickerInput
+      valueFormat="DD MMMM YYYY"
+      locale="id"
+      value={props.value === '' ? null : props.value}
+      {...props}
+    />
   );
 }
 
@@ -242,35 +164,35 @@ export function PersonalInfoForm({ form, isMobile = false }: PersonalInfoFormPro
               required
               label="NAMA LENGKAP"
               placeholder="Masukkan nama lengkap"
-              info="Isi nama lengkap sesuai yang tertera di KTP dengan HURUF KAPITAL"
+              description="Isi nama lengkap sesuai yang tertera di KTP dengan HURUF KAPITAL"
               {...form.getInputProps('nama_lengkap')}
             />
             <TextInputField
               label="NIK"
               placeholder="Masukkan NIK"
               required
-              info="Nomor Induk Kependudukan sesuai yang tertera di KTP (16 digit)"
+              description="Nomor Induk Kependudukan sesuai yang tertera di KTP (16 digit)"
               {...form.getInputProps('nik')}
             />
             <TextInputField
               label="TEMPAT LAHIR"
               placeholder="Masukkan tempat lahir"
               required
-              info="Isi tempat lahir sesuai yang tertera di KTP dengan HURUF KAPITAL"
+              description="Isi tempat lahir sesuai yang tertera di KTP dengan HURUF KAPITAL"
               {...form.getInputProps('tempat_lahir')}
             />
             <DateInputField
               label="TANGGAL LAHIR"
               required
               placeholder="Pilih tanggal lahir"
-              info="Pilih tanggal lahir sesuai yang tertera di KTP"
+              description="Pilih tanggal lahir sesuai yang tertera di KTP"
               leftSection={<IconCalendar size={16} />}
               {...form.getInputProps('tanggal_lahir')}
             />
             <NumberInputField
               label="USIA"
               required
-              info="Usia otomatis terhitung berdasarkan tanggal lahir"
+              description="Usia otomatis terhitung berdasarkan tanggal lahir"
               placeholder="Otomatis terisi"
               readOnly
               disabled
@@ -281,7 +203,7 @@ export function PersonalInfoForm({ form, isMobile = false }: PersonalInfoFormPro
               required
               label="JENIS KELAMIN"
               placeholder="Pilih jenis kelamin"
-              info="Pilih jenis kelamin sesuai yang tertera di KTP"
+              description="Pilih jenis kelamin sesuai yang tertera di KTP"
               data={[
                 { value: 'L', label: 'LAKI-LAKI' },
                 { value: 'P', label: 'PEREMPUAN' },
@@ -304,7 +226,7 @@ export function PersonalInfoForm({ form, isMobile = false }: PersonalInfoFormPro
               label="DAERAH LAHIR"
               placeholder="Pilih daerah lahir"
               required
-              info="Daerah asal lokasi kelahiran sesuai dengan provinsi tempat lahir"
+              description="Daerah asal lokasi kelahiran sesuai dengan provinsi tempat lahir"
               data={daerahList}
               {...form.getInputProps('daerah_lahir')}
             />
@@ -313,40 +235,9 @@ export function PersonalInfoForm({ form, isMobile = false }: PersonalInfoFormPro
               label="PROVINSI LAHIR"
               placeholder="Pilih provinsi lahir"
               required
-              info="Provinsi tempat kelahiran sesuai yang tertera di KTP"
+              description="Provinsi tempat kelahiran sesuai yang tertera di KTP"
               data={uppercaseProvinsiList}
               {...form.getInputProps('provinsi_lahir')}
-            />
-          </Stack>
-        </div>
-
-        <div>
-          <Title order={3} c="blue.8">
-            <Group gap="sm">
-              <IconRuler size={20} />
-              DATA FISIK
-            </Group>
-          </Title>
-          <Stack gap="lg" mt="lg">
-            <NumberInputField
-              required
-              label="TINGGI BADAN (CM)"
-              placeholder="Masukkan tinggi badan"
-              info="Masukkan tinggi badan dalam satuan centimeter (140-220 cm)"
-              min={140}
-              max={220}
-              leftSection={<IconRuler size={16} />}
-              {...form.getInputProps('tinggi_badan')}
-            />
-            <NumberInputField
-              required
-              label="BERAT BADAN (KG)"
-              placeholder="Masukkan berat badan"
-              info="Masukkan berat badan dalam satuan kilogram (40-150 kg)"
-              min={40}
-              max={150}
-              leftSection={<IconWeight size={16} />}
-              {...form.getInputProps('berat_badan')}
             />
           </Stack>
         </div>
@@ -364,7 +255,7 @@ export function PersonalInfoForm({ form, isMobile = false }: PersonalInfoFormPro
               label="DAERAH DOMISILI"
               placeholder="Pilih daerah domisili"
               required
-              info="Daerah tempat tinggal saat ini sesuai dengan domisili aktual"
+              description="Daerah tempat tinggal saat ini sesuai dengan domisili aktual"
               data={daerahList}
               {...form.getInputProps('daerah_domisili')}
             />
@@ -373,7 +264,7 @@ export function PersonalInfoForm({ form, isMobile = false }: PersonalInfoFormPro
               label="PROVINSI DOMISILI"
               placeholder="Pilih provinsi domisili"
               required
-              info="Provinsi tempat tinggal saat ini sesuai dengan domisili aktual"
+              description="Provinsi tempat tinggal saat ini sesuai dengan domisili aktual"
               data={provinsiList.map((provinsi) => provinsi.toUpperCase())}
               {...form.getInputProps('provinsi_domisili')}
             />
@@ -381,7 +272,7 @@ export function PersonalInfoForm({ form, isMobile = false }: PersonalInfoFormPro
               required
               label="KOTA DOMISILI"
               placeholder="Masukkan kota domisili"
-              info="Kota/kabupaten tempat tinggal saat ini dengan HURUF KAPITAL"
+              description="Kota/kabupaten tempat tinggal saat ini dengan HURUF KAPITAL"
               leftSection={<IconMapPin size={16} />}
               {...form.getInputProps('kota_domisili')}
             />
@@ -389,7 +280,7 @@ export function PersonalInfoForm({ form, isMobile = false }: PersonalInfoFormPro
               required
               label="ALAMAT DOMISILI"
               placeholder="Masukkan alamat domisili"
-              info="Alamat lengkap tempat tinggal saat ini dengan HURUF KAPITAL (nama jalan, nomor rumah, RT/RW, kelurahan, kecamatan)"
+              description="Alamat lengkap tempat tinggal saat ini dengan HURUF KAPITAL (nama jalan, nomor rumah, RT/RW, kelurahan, kecamatan)"
               leftSection={<IconMapPin size={16} />}
               {...form.getInputProps('alamat_domisili')}
             />
@@ -409,7 +300,7 @@ export function PersonalInfoForm({ form, isMobile = false }: PersonalInfoFormPro
               required
               label="PROGRAM YANG DIPILIH"
               placeholder="Pilih program"
-              info="Pilih program magang yang diminati"
+              description="Pilih program magang yang diminati"
               data={[
                 {
                   value: 'pkpp-estate',
@@ -423,6 +314,37 @@ export function PersonalInfoForm({ form, isMobile = false }: PersonalInfoFormPro
                 },
               ]}
               {...form.getInputProps('program_terpilih')}
+            />
+          </Stack>
+        </div>
+
+        <div>
+          <Title order={3} c="blue.8">
+            <Group gap="sm">
+              <IconRuler size={20} />
+              DATA FISIK
+            </Group>
+          </Title>
+          <Stack gap="lg" mt="lg">
+            <NumberInputField
+              required
+              label="TINGGI BADAN (CM)"
+              placeholder="Masukkan tinggi badan"
+              description="Masukkan tinggi badan dalam satuan centimeter (140-220 cm)"
+              min={140}
+              max={220}
+              leftSection={<IconRuler size={16} />}
+              {...form.getInputProps('tinggi_badan')}
+            />
+            <NumberInputField
+              required
+              label="BERAT BADAN (KG)"
+              placeholder="Masukkan berat badan"
+              description="Masukkan berat badan dalam satuan kilogram (40-150 kg)"
+              min={40}
+              max={150}
+              leftSection={<IconWeight size={16} />}
+              {...form.getInputProps('berat_badan')}
             />
           </Stack>
         </div>

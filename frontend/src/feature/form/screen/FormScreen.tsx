@@ -27,7 +27,7 @@ import {
   IconInfoCircle,
   IconRefresh,
 } from '@tabler/icons-react';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 import { submitForm } from '@/lib/api/formApi';
 import { Route } from '@/routes/$location/$batch';
@@ -52,6 +52,7 @@ export default function FormScreen() {
   const [forceValidation, setForceValidation] = useState(0);
   const totalSteps = 2; // Agreement, Personal Info
   const isMobile = useMediaQuery(`(max-width: ${em(750)})`);
+  const stepStatusRef = useRef<HTMLDivElement>(null);
 
   // Create safe validation functions that handle errors gracefully
   const safeValidateAgreement = (values: AgreementData) => {
@@ -262,6 +263,12 @@ export default function FormScreen() {
         return;
       }
     }
+
+    // scroll to the status formulir
+    window.scrollTo({
+      top: stepStatusRef.current?.offsetTop || 0,
+      behavior: 'smooth',
+    });
 
     setActiveStep((current) => Math.min(current + 1, totalSteps - 1));
   };
@@ -668,6 +675,7 @@ export default function FormScreen() {
 
         {/* Step Status Overview */}
         <Paper
+          ref={stepStatusRef}
           p="md"
           radius="md"
           withBorder

@@ -19,6 +19,7 @@ const router = createRouter({
   defaultErrorComponent: ErrorScreenComponent,
   defaultNotFoundComponent: NotFoundScreenComponent,
   defaultPendingComponent: PendingScreenComponent,
+  scrollRestoration: true,
 });
 
 // Register the router instance for type safety
