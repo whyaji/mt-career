@@ -1,11 +1,9 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, notFound } from '@tanstack/react-router';
 
 import { NotFoundScreenComponent } from '@/components/NotFoundScreenComponent';
 import FormScreen from '@/feature/form/screen/FormScreen';
 import { getVerificationPath } from '@/lib/api/verification.api';
 import type { BatchType } from '@/types/batch.type';
-
-import { PendingScreenComponent } from '../../../components/PendingScreenComponent';
 
 export const Route = createFileRoute('/$location/$batch/')({
   loader: async ({ params }) => {
@@ -14,10 +12,12 @@ export const Route = createFileRoute('/$location/$batch/')({
     const responseData = await response.json();
     if (responseData.success && 'data' in responseData) {
       return responseData.data as BatchType;
+    } else if (responseData.error === 'BATCH_NOT_FOUND') {
+      throw notFound();
+    } else {
+      throw new Error();
     }
-    throw new Error();
   },
   component: FormScreen,
-  pendingComponent: PendingScreenComponent,
-  errorComponent: NotFoundScreenComponent,
+  notFoundComponent: NotFoundScreenComponent,
 });

@@ -1,18 +1,13 @@
 import { createRootRoute, Outlet } from '@tanstack/react-router';
 
+import { BackgroundLayer } from '@/components/BackgroundLayer';
+
 const RootLayout = () => (
-  <div
-    style={{
-      minHeight: '100vh',
-      width: '100%',
-      backgroundImage: 'url(/images/bg.jpg)',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat',
-      backgroundAttachment: 'fixed',
-    }}>
+  <BackgroundLayer>
     <Outlet />
-  </div>
+  </BackgroundLayer>
 );
 
-export const Route = createRootRoute({ component: RootLayout });
+export const Route = createRootRoute({
+  component: RootLayout,
+});

@@ -14,7 +14,7 @@ import {
 import { IconAlertTriangle, IconHome, IconSearch } from '@tabler/icons-react';
 import { useNavigate } from '@tanstack/react-router';
 
-export function NotFoundScreenComponent() {
+export function ErrorScreenComponent() {
   const navigate = useNavigate();
 
   const handleGoHome = () => {
@@ -41,20 +41,21 @@ export function NotFoundScreenComponent() {
             width: '100%',
           }}>
           <Stack gap="xl" align="center">
-            {/* Large 404 Number */}
+            {/* Large terjadi kesalahan Number */}
             <Box style={{ position: 'relative' }}>
               <Title
                 order={1}
-                size="8rem"
+                size="4rem"
                 fw={900}
+                pt="xl"
                 c="white"
                 style={{
-                  fontSize: 'clamp(4rem, 15vw, 8rem)',
+                  fontSize: 'clamp(2rem, 15vw, 4rem)',
                   textShadow: '0 4px 8px rgba(0, 0, 0, 0.3)',
                   letterSpacing: '-0.05em',
                   opacity: 0.9,
                 }}>
-                404
+                Error
               </Title>
               <Box
                 style={{
@@ -85,13 +86,12 @@ export function NotFoundScreenComponent() {
                 fontSize: 'clamp(1.5rem, 4vw, 2.5rem)',
                 textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)',
               }}>
-              Halaman Tidak Ditemukan
+              Terjadi Kesalahan
             </Title>
 
             {/* Description */}
             <Text size="lg" ta="center" c="rgba(255, 255, 255, 0.9)" maw={400} lh={1.6}>
-              Maaf, halaman yang Anda cari tidak dapat ditemukan. Mungkin halaman telah dipindahkan
-              atau URL yang dimasukkan salah.
+              Maaf, halaman yang Anda cari terjadi kesalahan. Silakan coba lagi.
             </Text>
 
             {/* Action Buttons */}
@@ -136,26 +136,26 @@ export function NotFoundScreenComponent() {
       {/* CSS Animation */}
       <style>
         {`
-          @keyframes float {
-            0%, 100% {
-              transform: translate(-50%, -50%) translateY(0px);
+            @keyframes float {
+              0%, 100% {
+                transform: translate(-50%, -50%) translateY(0px);
+              }
+              50% {
+                transform: translate(-50%, -50%) translateY(-10px);
+              }
             }
-            50% {
-              transform: translate(-50%, -50%) translateY(-10px);
+            
+            @keyframes fadeIn {
+              from {
+                opacity: 0;
+                transform: translateY(20px);
+              }
+              to {
+                opacity: 1;
+                transform: translateY(0);
+              }
             }
-          }
-          
-          @keyframes fadeIn {
-            from {
-              opacity: 0;
-              transform: translateY(20px);
-            }
-            to {
-              opacity: 1;
-              transform: translateY(0);
-            }
-          }
-        `}
+          `}
       </style>
     </Container>
   );
