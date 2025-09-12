@@ -1,9 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 
-export const Route = createFileRoute('/')({
-  component: Index,
-});
+import HomeScreen from '@/feature/home/screen/HomeScreen';
 
-function Index() {
-  return <div>Index</div>;
-}
+export const Route = createFileRoute('/')({
+  component: HomeScreen,
+});

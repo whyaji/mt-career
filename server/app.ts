@@ -3,6 +3,7 @@ import { serveStatic } from 'hono/bun';
 import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
 
+import { batchRoute } from './routes/batchRoute';
 import { formRoute } from './routes/formRoute';
 import { verficationRoute } from './routes/verificationRoute';
 
@@ -15,6 +16,7 @@ app.use('*', cors());
 const apiRoutes = app
   .basePath('/api/v1')
   .route('/verification', verficationRoute)
+  .route('/batch', batchRoute)
   .route('/form', formRoute);
 
 // Serve files from public directory
