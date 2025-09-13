@@ -3,6 +3,7 @@ import { Hono } from 'hono';
 
 import { db } from '../db/database';
 import { batchTable } from '../db/schema/schema';
+import { BatchStatus } from '../enum/batchStatus.enum';
 import { logger } from '../lib/logger';
 
 export const batchRoute = new Hono().get('/active', async (c) => {
@@ -17,7 +18,7 @@ export const batchRoute = new Hono().get('/active', async (c) => {
         year: batchTable.year,
       })
       .from(batchTable)
-      .where(eq(batchTable.status, 1));
+      .where(eq(batchTable.status, BatchStatus.ACTIVE));
     return c.json({ success: true, data: batches }, 200);
   } catch (error) {
     logger.error(`Error getting active batches: ${error}`);

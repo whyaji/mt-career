@@ -3,6 +3,7 @@ import { Hono } from 'hono';
 
 import { db } from '../db/database';
 import { batchTable } from '../db/schema/schema';
+import { BatchStatus } from '../enum/batchStatus.enum';
 
 export const verficationRoute = new Hono().get('/path/:batchLocation/:batchNumber', async (c) => {
   try {
@@ -23,7 +24,8 @@ export const verficationRoute = new Hono().get('/path/:batchLocation/:batchNumbe
       .where(
         and(
           eq(batchTable.number_code, batchNumber.toUpperCase()),
-          eq(batchTable.location_code, batchLocation.toUpperCase())
+          eq(batchTable.location_code, batchLocation.toUpperCase()),
+          eq(batchTable.status, BatchStatus.ACTIVE)
         )
       )
       .limit(1);
