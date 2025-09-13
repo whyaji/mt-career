@@ -7,7 +7,7 @@ import { db } from '../db/database';
 import { applicantDataTable } from '../db/schema/schema';
 import { logger } from '../lib/logger';
 import { containsSuspiciousPatterns, sanitizeText, verifyTurnstileToken } from '../lib/security';
-import { ApplicantDataPostType, zodApplicantDataPost } from '../types/applicantData.type';
+import { type ApplicantDataPostType, zodApplicantDataPost } from '../types/applicantData.type';
 
 export const formRoute = new Hono().post(
   '/',
