@@ -7,7 +7,7 @@ import { db } from '../db/database';
 import { applicantDataTable } from '../db/schema/schema';
 import { logger } from '../lib/logger';
 import { containsSuspiciousPatterns, sanitizeText, verifyTurnstileToken } from '../lib/security';
-import { zodApplicantDataPost } from '../types/applicantData.type';
+import { ApplicantDataPostType, zodApplicantDataPost } from '../types/applicantData.type';
 
 export const formRoute = new Hono().post(
   '/',
@@ -25,6 +25,13 @@ export const formRoute = new Hono().post(
         return c.json({ error: 'TURNSTILE_FAILED', message: 'Security verification failed' }, 400);
       }
 
+      // check pkpp need to be in this list
+      const validPrograms = ['pkpp-estate', 'pkpp-ktu', 'pkpp-mill'];
+      if (!validPrograms.includes(body.program_terpilih)) {
+        logger.warn(`Invalid program selected from IP: ${clientIP}`);
+        return c.json({ error: 'INVALID_PROGRAM', message: 'Invalid program selected' }, 400);
+      }
+
       // Additional security checks
       const textFields = [
         body.nama_lengkap,
@@ -32,6 +39,10 @@ export const formRoute = new Hono().post(
         body.kota_domisili,
         body.daerah_domisili,
         body.provinsi_domisili,
+        body.tempat_lahir,
+        body.daerah_lahir,
+        body.provinsi_lahir,
+        body.program_terpilih,
       ];
 
       // Check for suspicious patterns
@@ -45,13 +56,17 @@ export const formRoute = new Hono().post(
       }
 
       // Sanitize text inputs
-      const sanitizedBody = {
+      const sanitizedBody: ApplicantDataPostType = {
         ...body,
-        nama_lengkap: sanitizeText(body.nama_lengkap),
-        alamat_domisili: sanitizeText(body.alamat_domisili),
-        kota_domisili: sanitizeText(body.kota_domisili),
-        daerah_domisili: sanitizeText(body.daerah_domisili),
-        provinsi_domisili: sanitizeText(body.provinsi_domisili),
+        program_terpilih: sanitizeText(body.program_terpilih),
+        nama_lengkap: sanitizeText(body.nama_lengkap.toUpperCase()),
+        daerah_lahir: sanitizeText(body.daerah_lahir.toUpperCase()),
+        provinsi_lahir: sanitizeText(body.provinsi_lahir.toUpperCase()),
+        tempat_lahir: sanitizeText(body.tempat_lahir.toUpperCase()),
+        alamat_domisili: sanitizeText(body.alamat_domisili.toUpperCase()),
+        kota_domisili: sanitizeText(body.kota_domisili.toUpperCase()),
+        daerah_domisili: sanitizeText(body.daerah_domisili.toUpperCase()),
+        provinsi_domisili: sanitizeText(body.provinsi_domisili.toUpperCase()),
       };
 
       // remove agreements and turnstileToken from body to match ApplicantDataPostType

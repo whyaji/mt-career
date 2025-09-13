@@ -131,10 +131,10 @@ export function FormHeader({
                 </Title>
                 <Text size="sm">
                   Program ini merupakan program khusus fresh graduate yang ditujukan bagi
-                  insan-insan muda fresh graduate yang berdomisili di Yogyakarta dan sekitarnya
-                  dengan jenjang pendidikan min. D3 yang berbakat dan penuh semangat. Program ini
-                  diawali dengan Training selama 3 Bulan, lanjut OJT (On The Job Training) selama 6
-                  Bulan dan dilanjutkan dengan masa Ikatan Dinas.
+                  insan-insan muda fresh graduate yang berdomisili di {batch.location} dan
+                  sekitarnya dengan jenjang pendidikan min. D3 yang berbakat dan penuh semangat.
+                  Program ini diawali dengan Training selama 3 Bulan, lanjut OJT (On The Job
+                  Training) selama 6 Bulan dan dilanjutkan dengan masa Ikatan Dinas.
                 </Text>
               </Paper>
             </>

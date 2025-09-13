@@ -277,6 +277,10 @@ export default function FormScreen() {
   };
 
   const handlePrevious = () => {
+    if (activeStep === totalSteps - 1) {
+      setTurnstileToken(null);
+      turnstileRef.current?.reset();
+    }
     setValidationErrors([]);
     setSubmitError(null);
     setActiveStep((current) => Math.max(current - 1, 0));
