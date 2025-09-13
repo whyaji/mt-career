@@ -38,6 +38,7 @@ import { FormHeader } from '../../../components/FormHeader';
 import { FormPagination } from '../../../components/FormPagination';
 import { PersonalInfoForm } from '../../../components/PersonalInfoForm';
 import { SubmissionConfirmation } from '../../../components/SubmissionConfirmation';
+import TurnstileWidget, { type TurnstileWidgetRef } from '../../../components/TurnstileWidget';
 import { type AgreementData, agreementSchema } from '../../../schemas/agreementSchema';
 import { type PersonalInfoData, personalInfoSchema } from '../../../schemas/personalInfoSchema';
 
@@ -50,9 +51,11 @@ export default function FormScreen() {
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const [hasAttemptedNext, setHasAttemptedNext] = useState(false);
   const [forceValidation, setForceValidation] = useState(0);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const totalSteps = 2; // Agreement, Personal Info
   const isMobile = useMediaQuery(`(max-width: ${em(750)})`);
   const stepStatusRef = useRef<HTMLDivElement>(null);
+  const turnstileRef = useRef<TurnstileWidgetRef>(null);
 
   // Create safe validation functions that handle errors gracefully
   const safeValidateAgreement = (values: AgreementData) => {
@@ -274,6 +277,10 @@ export default function FormScreen() {
   };
 
   const handlePrevious = () => {
+    if (activeStep === totalSteps - 1) {
+      setTurnstileToken(null);
+      turnstileRef.current?.reset();
+    }
     setValidationErrors([]);
     setSubmitError(null);
     setActiveStep((current) => Math.max(current - 1, 0));
@@ -345,6 +352,18 @@ export default function FormScreen() {
     const agreementValidation = agreementForm.validate();
     const personalInfoValidation = personalInfoForm.validate();
 
+    // Check for Turnstile token
+    if (!turnstileToken) {
+      setValidationErrors(['Verifikasi keamanan harus diselesaikan']);
+      notifications.show({
+        title: 'Verifikasi Diperlukan',
+        message: 'Mohon selesaikan verifikasi keamanan terlebih dahulu.',
+        color: 'red',
+        icon: <IconExclamationMark size={16} />,
+      });
+      return;
+    }
+
     if (agreementValidation.hasErrors || personalInfoValidation.hasErrors) {
       // Collect all validation errors for display
       const allErrors = [
@@ -393,6 +412,8 @@ export default function FormScreen() {
           | 'pkpp-ktu'
           | 'pkpp-mill',
         batch_id: batch.id,
+        // Turnstile token
+        turnstileToken,
       };
 
       await submitForm(combinedData);
@@ -434,6 +455,8 @@ export default function FormScreen() {
     setSubmitError(null);
     setValidationErrors([]);
     setHasAttemptedNext(false);
+    setTurnstileToken(null);
+    turnstileRef.current?.reset();
 
     notifications.show({
       title: 'Reset Berhasil',
@@ -722,6 +745,54 @@ export default function FormScreen() {
         </Paper>
 
         {renderStepContent()}
+
+        {/* Turnstile Widget - only show on last step */}
+        {activeStep === totalSteps - 1 && (
+          <Paper
+            p="md"
+            radius="md"
+            withBorder
+            bg="rgba(255, 255, 255, 0.9)"
+            style={{ backdropFilter: 'blur(5px)' }}>
+            <Stack gap="sm">
+              <Group gap="xs">
+                <Text size="sm" fw={500}>
+                  Verifikasi Keamanan
+                </Text>
+                {turnstileToken && (
+                  <Badge color="green" variant="light" size="sm">
+                    ✓ Terverifikasi
+                  </Badge>
+                )}
+              </Group>
+              <Text size="xs" c="dimmed">
+                Mohon selesaikan verifikasi keamanan di bawah ini sebelum mengirim formulir
+              </Text>
+              <Center>
+                <TurnstileWidget
+                  ref={turnstileRef}
+                  onSuccess={setTurnstileToken}
+                  onError={() => {
+                    setTurnstileToken(null);
+                    notifications.show({
+                      title: 'Verifikasi Gagal',
+                      message: 'Terjadi kesalahan pada verifikasi keamanan. Silakan coba lagi.',
+                      color: 'red',
+                    });
+                  }}
+                  onExpire={() => {
+                    setTurnstileToken(null);
+                    notifications.show({
+                      title: 'Verifikasi Kedaluwarsa',
+                      message: 'Verifikasi keamanan telah kedaluwarsa. Silakan verifikasi ulang.',
+                      color: 'orange',
+                    });
+                  }}
+                />
+              </Center>
+            </Stack>
+          </Paper>
+        )}
 
         <FormPagination
           isMobile={isMobile}

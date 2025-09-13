@@ -26,7 +26,7 @@ export type ApplicantDataType = {
 export type ApplicantDataPostType = Omit<
   ApplicantDataType,
   'id' | 'created_at' | 'updated_at' | 'deleted_at'
-> & { agreement1: string; agreement2: string; agreement3: string };
+> & { agreement1: string; agreement2: string; agreement3: string; turnstileToken: string };
 
 export const zodApplicantDataPost = z.object({
   nama_lengkap: z.string().min(1),
@@ -48,4 +48,5 @@ export const zodApplicantDataPost = z.object({
   agreement1: z.string().min(1),
   agreement2: z.string().min(1),
   agreement3: z.string().min(1),
+  turnstileToken: z.string().min(1),
 });

@@ -24,4 +24,4 @@ export type ApplicantDataType = {
 export type ApplicantDataPostType = Omit<
   ApplicantDataType,
   'id' | 'created_at' | 'updated_at' | 'deleted_at'
-> & { agreement1: string; agreement2: string; agreement3: string };
+> & { agreement1: string; agreement2: string; agreement3: string; turnstileToken: string };
